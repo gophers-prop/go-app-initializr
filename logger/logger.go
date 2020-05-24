@@ -2,7 +2,7 @@ package logger
 
 import (
 	"os"
-	"github.com/sirupsen/logrus"
+  "github.com/sirupsen/logrus"
 )
 func init(){
 
@@ -13,5 +13,10 @@ func init(){
   logrus.SetOutput(os.Stdout)
 
   // Only log the warning severity or above.
-  logrus.SetLevel(logrus.InfoLevel)
+  logrus.SetLevel(logrus.ErrorLevel)
+}
+
+//Log returns a logging entry that will have a label appName
+func Log(appName string) (*logrus.Entry){
+	return logrus.WithField("go-initializer-app-name",appName)
 }

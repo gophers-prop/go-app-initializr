@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"go-initializer/consts"
+	"go-initializer/types"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -115,4 +116,8 @@ func GetOnlyTemplateCOnfigurableFiles(rootPath string) ([]string, error) {
 		return nil, err
 	}
 	return filePath, nil
+}
+
+func GetError(err error , httpStatus int) *types.Error{
+	return &types.Error{Error : err , HTTPStatus:httpStatus}
 }
