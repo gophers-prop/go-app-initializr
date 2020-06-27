@@ -51,6 +51,14 @@
         "CONFIG" :{
             "ERROR_READING_FILE" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"error while reading configuaration '%+v' \",err)",
             "SUCCESSFULLY_LOADED" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Infof(\"Configuration from file config.yaml/config.json loaded successfully \")"
+        },
+        "SWAGGER" :{
+            "SERVER_STARTED_SUCCESS": "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Swagger server started on port '%s' successfully \",SWAGGER_PORT)",
+            "SERVER_STARTED_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error starting swagger server '%+v' \",swaggerErr)"
+        },
+        "SERVER":{
+            "ERROR" :  "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error starting server '%+v' \",serverErr)",
+            "SUCCESS" :  "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Server  running on port '%s' \",port)"
         }
     }
 } 

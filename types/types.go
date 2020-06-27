@@ -11,7 +11,9 @@ type Messages struct {
 	Auth map[string]string `json:"AUTH"`
 	Handler map[string]string `json:"HANDLER"`
 	Config   map[string]string `json:"CONFIG"`
- }
+	Swagger  map[string]string  `json:"SWAGGER"`
+	Server   map[string]string   `json:"SERVER"`
+  }
 
 type LoggingFramework struct {
 	LibraryName string   `json:"LIBRARY_NAME"`
