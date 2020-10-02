@@ -3,11 +3,62 @@
     "IMPORT_PATH" : "github.com/golang/glog",
     "VERSION" : "v0.0.0-20160126235308-23def4e6c14b",
     "MESSAGES"  : {
-        "ERROR" : "glog.Errorf(\"This is an error message \")",
-        "INFO" : "glog.Infof(\"This is an info message\")",
-        "WARN" : "glog.Warningf(\"This is a warning message\")",
-        "FATAL" : "glog.Fatalf(\"This is a fatal message\")",
-        "DEBUG" : ""
-        
+        "GENERAL" :{
+            "ERROR" : "glog.Error(\"This is an error message\")",
+            "INFO" : "glog.Info(\"This is an info message\")",
+            "WARN" : "glog.Warning(\"This is a warning message\")",
+            "FATAL" : "glog.Fatal(\"This is a fatal message\")",
+            "DEBUG" : "glog.Info(\"This is a debug message\")"
+        },
+        "USER" :{
+            "GET_ALL" : "glog.Errorf(\"Error while getting all user %+v\",err.Err)",
+            "CREATE" : "glog.Errorf(\"Error while creating  user %+v\",err.Err)",
+            "GET" : "glog.Errorf(\"Error while getting user with user id  %s error %+v\",id,err.Err)",
+            "UPDATE" : "glog.Errorf(\"Error while updating user with userId %s error %+v\",user.ID,err.Err)",
+            "DELETE" :  "glog.Errorf(\"Error while deleting user %+v error %+v\",user,err.Err)"
+        },
+        "DATABASE" : {
+            "CONNECTION_ERROR" : "glog.Errorf(\"Error while connecting to database %+v\",err)",
+            "QUERY_ERROR" : "glog.Errorf(\"Error while executing query %+v\",err)"
+        },
+        "JWT" :{
+            "ERROR_GENERATING_NEW_TOKEN": "glog.Errorf(\"Error while generating new token '%+v'\",tokenErr)",
+            "EMPTY_TOKEN_ERROR" : "glog.Errorf(\"Empty token or token not present in header\")",
+            "INVALID_TOKEN" : "glog.Errorf(\"Invalid token\")",
+            "ERROR_VALIDATION_TOKEN" : "glog.Errorf(\"Error while validating jwt token '%+v'\",err)",
+            "ERROR_PARSING_TOKEN" : "glog.Errorf(\"Error while parsing jwt token '%+v' '%+v'\",err)"
+        },
+        "AUTH" : {
+            "ERROR_ENCRYPTING_PASSWORD" : "glog.Errorf(\"Error while encrypting password up '%+v'\",err)",
+            "ERROR_LOGGING_IN" : "glog.Errorf(\"Error while log In '%+v'\",err)",
+            "ERROR_SIGNING_UP" : "glog.Errorf(\"Error while signing up '%+v'\",err)",
+            "ERROR_INCORRECT_PASSWORD" : "glog.Errorf(\"Invalid password\")"
+        },
+        "HANDLER":{
+            "CREATE_USER" : "glog.Infof(\"Request to create user started\")",
+            "GET_USER" : "glog.Infof(\"Request to get user started\")",
+            "UPDATE_USER" : "glog.Infof(\"Request to update user started\")",
+            "DELETE_USER" : "glog.Infof(\"Request to delete user started\")",
+            "GET_ALL_USER" : "glog.Infof(\"Request to get all user started\")",
+            "LOGIN" : "glog.Infof(\"Request to login started\")",
+            "LOGIN_ERROR" : "glog.Errorf(\"Error while login in  '%+v' \",loginErr.Err)",
+            "SIGNUP" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to signup started\")",
+            "SIGNUP_ERROR" : "glog.Errorf(\"Error while generating jwt token %+v\",signupErr.Err)",
+            "REFRESH_TOKEN" : "glog.Infof(\"Request to refresh token started\")",
+            "ERROR_KEY_NOT_FOUND_JWT" : "glog.Errorf(\"Error getting key from jwt '%+v' \",err)",
+            "ERROR_REFRESH_TOKEN":"glog.Errorf(\"Error refreshing jwt token '%+v' \",refreshTokenErr.Err)"
+        },
+        "CONFIG" :{
+            "ERROR_READING_FILE" : "glog.Errorf(\"error while reading configuaration '%+v' \",err)",
+            "SUCCESSFULLY_LOADED" : "glog.Infof(\"Configuration from file config.yaml/config.json loaded successfully \")"
+        },
+        "SWAGGER" :{
+            "SERVER_STARTED_SUCCESS": "glog.Errorf(\"Swagger server started on port '%s' successfully \",SWAGGER_PORT)",
+            "SERVER_STARTED_ERROR" : "glog.Errorf(\"Error starting swagger server '%+v' \",swaggerErr)"
+        },
+        "SERVER":{
+            "ERROR" :  "glog.Errorf(\"Error starting server '%+v' \",serverErr)",
+            "SUCCESS" :  "glog.Errorf(\"Server  running on port '%s' \",port)"
+        }
     }
 } 

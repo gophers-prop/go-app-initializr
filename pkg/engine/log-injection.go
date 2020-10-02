@@ -12,7 +12,6 @@ import (
 func readLogJson(logFramework string) (*types.LoggingFramework, error) {
 	homePath := utils.GetWorkingDirNoError()
 	jsonFilePath := filepath.Join(homePath, "template", "logframework", logFramework, "logger.json")
-
 	types.Mutex.Lock()
 	
 	jsonData, err := ioutil.ReadFile(jsonFilePath)
@@ -30,7 +29,7 @@ func readLogJson(logFramework string) (*types.LoggingFramework, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Error Unmarshalling  json log file for logging framework %s with error %s", logFramework, err.Error())
 	}
-    fmt.Println(frameworkData)
+    
 	return &frameworkData, nil
 
 }

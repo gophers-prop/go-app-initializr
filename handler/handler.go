@@ -3,22 +3,14 @@ package handler
 import (
 	"go-initializer/pkg/engine"
 
-
 	"fmt"
-	
-
-	
-	
 
 	"net/http"
 
-	
-     
 	"github.com/gin-gonic/gin"
-	
 )
 
-// Test : test function ...Must be removed 
+// Test : test function ...Must be removed
 func Test(ctx *gin.Context) {
 	var request engine.GenerateTemplateRequest
 
@@ -27,7 +19,6 @@ func Test(ctx *gin.Context) {
 	}
 	fmt.Println(request)
 }
-
 
 //Liveness sds
 func Liveness(ctx *gin.Context) {
@@ -39,5 +30,5 @@ func Liveness(ctx *gin.Context) {
 
 //GenerateTemplate Create a zip file of a template code
 func GenerateTemplate(ctx *gin.Context) {
-	 engine.GenerateTemplate(ctx)
+	engine.GenerateTemplate(ctx)
 }

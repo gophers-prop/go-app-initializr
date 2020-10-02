@@ -32,7 +32,7 @@
       "http"
     ],
     "paths": { 
-      "/user": {
+      "/v1/user": {
         "get": {
             "tags" :[
                 "user"
@@ -88,7 +88,7 @@
           }
         }
       },
-      "/user/{id}": {
+      "/v1/user/{id}": {
         "get": {
           "tags": [
             "user"
@@ -197,6 +197,85 @@
             }
           }
         }
+      },
+      "/v1/login":{
+        "post":{
+          "tags" :["POST","LOGIN"],
+          "summary": "login user",
+          "description": "login.",
+          "operationId": "login",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Login object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Auth"
+              }
+            }
+          ],
+          "responses": {
+            "200":{
+              "description" : "success response",
+               "schema": {
+                "$ref": "#/definitions/AuthResponse"
+              }
+            },
+            "400": {
+              "description": "Invalid email/password supplied"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500":{
+                "description":"Internal server Error"
+            }
+          }
+           
+        }
+      },
+      "/v1/signup":{
+        "post":{
+          "tags" :["POST","SIGNUP"],
+          "summary": "signup user",
+          "description": "signup.",
+          "operationId": "signup",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "signup object",
+              "required": true,
+              "schema": {
+                "$ref": "#/definitions/Auth"
+              }
+            }
+          ],
+          "responses": {
+            "200":{
+              "description" : "success response",
+               "schema": {
+                "$ref": "#/definitions/AuthResponse"
+              }
+            },
+            "400": {
+              "description": "Invalid email/password supplied"
+            },
+            "404": {
+              "description": "User not found"
+            },
+            "500":{
+                "description":"Internal server Error"
+            }
+          }    
+        }
       }
     },
     "definitions": {
@@ -248,6 +327,40 @@
           },
           "message": {
             "type": "string"
+          }
+        }
+      },
+      "Auth":{
+        "type": "object",
+        "required":[
+          "email",
+          "password"
+        ],
+        "properties":{
+          "email":{
+            "type": "string",
+            "description" : "user email"
+          },
+          "password":{
+            "type" : "string",
+            "description" : "user password"
+          }
+        }
+      },
+      "AuthResponse":{
+        "type": "object",
+        "required":[
+          "email",
+          "token"
+        ],
+        "properties":{
+          "email":{
+            "type": "string",
+            "description" : "user email"
+          },
+          "token":{
+            "type" : "string",
+            "description" : "jwt token"
           }
         }
       }

@@ -1,25 +1,25 @@
 package engine
 
 import (
-	"go-initializer/utils"
-	"net/http"
-	"go-initializer/logger"
-	"go-initializer/consts"
-	"github.com/gin-gonic/gin"
-	"path/filepath"
-	"fmt"
-	"time"
-	"errors"
-	"go-initializer/types"
-	"strings"
-	"os"
-	"text/template"
 	"archive/tar"
 	"archive/zip"
 	"compress/gzip"
+	"errors"
+	"fmt"
+	"go-initializer/consts"
+	"go-initializer/logger"
+	"go-initializer/types"
+	"go-initializer/utils"
 	"io"
-)
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"text/template"
+	"time"
 
+	"github.com/gin-gonic/gin"
+)
 
 //GenerateTemplateRequest request payload for generate template
 type GenerateTemplateRequest struct {
@@ -33,19 +33,19 @@ type GenerateTemplateRequest struct {
 	outputFolder        string
 	sourceFolder        string
 	outputArchive       string
-	Functionalities			[]Functionality	`json:"functionalities" binding:"required"`
+	Functionalities     []Functionality `json:"functionalities" binding:"required"`
 }
 
+func GenerateTemplate(ctx *gin.Context) {
 
-func GenerateTemplate(ctx *gin.Context){
-	  request , err := validateGenerateTemplateRequest(ctx)
-	  if err != nil {
+	request, err := validateGenerateTemplateRequest(ctx)
+	if err != nil {
 		ctx.JSON(err.HTTPStatus, gin.H{"error": err.Error})
 		ctx.Abort()
 		return
-	  }
-	err =  createOuputFolder(request)
-    if err != nil {
+	}
+	err = createOuputFolder(request)
+	if err != nil {
 		ctx.JSON(err.HTTPStatus, gin.H{"error": err.Error})
 		ctx.Abort()
 		return
@@ -64,29 +64,31 @@ func GenerateTemplate(ctx *gin.Context){
 		ctx.Abort()
 		return
 	}
-	    ctx.Header("Content-Description", "File Transfer")
-		ctx.Header("Content-Transfer-Encoding", "binary")
+	ctx.Header("Content-Description", "File Transfer")
+	ctx.Header("Content-Transfer-Encoding", "binary")
 
-		// zip is default output format . This is to support cli feature
-	
-		ctx.Header("Content-Disposition", "attachment; filename="+request.AppName+"."+request.OutputFormat)
-		
-		ctx.Header("File-name", request.AppName+"."+request.OutputFormat)
-		ctx.File(request.outputArchive)
+	// zip is default output format . This is to support cli feature
 
-		cleanUpError := request.Cleanup()
-		if cleanUpError != nil {
-			logger.Log(request.AppName).Warnf("Error while cleaning up outputs for request %+v",request)
-		}
+	ctx.Header("Content-Disposition", "attachment; filename="+request.AppName+"."+request.OutputFormat)
+
+	ctx.Header("File-name", request.AppName+"."+request.OutputFormat)
+	ctx.File(request.outputArchive)
+
+	cleanUpError := request.Cleanup()
+	if cleanUpError != nil {
+		logger.Log(request.AppName).Warnf("Error while cleaning up outputs for request %+v", request)
+	}
 }
 
-func validateGenerateTemplateRequest(ctx *gin.Context) (*GenerateTemplateRequest,*types.Error){
+func validateGenerateTemplateRequest(ctx *gin.Context) (*GenerateTemplateRequest, *types.Error) {
 	var request GenerateTemplateRequest
 	if err := ctx.ShouldBind(&request); err != nil {
-		logger.Log(request.AppName).Errorf("Error while reading request %+v" , request)
-		return nil,utils.GetError(err,http.StatusBadRequest)
+		logger.Log(request.AppName).Errorf("Error while reading request %+v", request)
+		return nil, utils.GetError(err, http.StatusBadRequest)
 	}
-	logger.Log(request.AppName).Infof("Received request for app generation %+v" , request)
+	fmt.Println(request)
+	logger.Log(request.AppName).Errorf("%+v", request)
+	logger.Log(request.AppName).Infof("Received request for app generation %+v", request)
 
 	request.requestTime = fmt.Sprintf("%d", time.Now().Unix())
 
@@ -95,35 +97,34 @@ func validateGenerateTemplateRequest(ctx *gin.Context) (*GenerateTemplateRequest
 	request.outputArchive = filepath.Join(sourcePath, consts.OUTPUT_ZIP, request.AppName+"."+request.OutputFormat)
 
 	if !utils.AppTypeExists(request.AppType) {
-		return nil,utils.GetError(errors.New("requested apptype does not exists"),http.StatusBadRequest)
+		return nil, utils.GetError(errors.New("requested apptype does not exists"), http.StatusBadRequest)
 	}
 
 	request.Library = strings.ReplaceAll(request.Library, "/", string(os.PathSeparator))
 
 	if !utils.LibExists(filepath.Join(request.AppType, request.Library)) {
-		return nil,utils.GetError(errors.New("requested library does not exists"),http.StatusBadRequest)
+		return nil, utils.GetError(errors.New("requested library does not exists"), http.StatusBadRequest)
 	}
 
 	request.sourceFolder = filepath.Join(sourcePath, "template", request.AppType, request.Library, "codebase")
 
-	return &request,nil
+	return &request, nil
 }
 
 func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 
 	err := os.Mkdir(request.outputFolder, 0777)
 	if err != nil {
-		logger.Log(request.AppName).Errorf("Error while creating output folder %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Errorf("Error while creating output folder %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 
 	config := getConfiguration(request)
-
-	//check if fun is a valid functionality or not
-	for _,fun := range request.Functionalities{
-		if fun.Name != ""{
-		fun.OutputFolder = request.outputFolder
-		featureMap[fun.Name](fun)
+	//check if fun is a valid functionality or not and inject the functionalities accordingly
+	for _, fun := range request.Functionalities {
+		if fun.Name != "" {
+			fun.OutputFolder = request.outputFolder
+			featureMap[fun.Name](fun)
 		}
 	}
 
@@ -144,19 +145,19 @@ func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 		} else {
 			t, err := template.ParseFiles(filePath)
 			if err != nil {
-				logger.Log(request.AppName).Errorf("Error while parsing file %s , Error : %+v",filePath,err)
+				logger.Log(request.AppName).Errorf("Error while parsing file %s , Error : %+v", filePath, err)
 				return err
 			}
 
 			f, err := os.Create(filepath.Join(request.outputFolder, outputFileName))
 			if err != nil {
-				logger.Log(request.AppName).Errorf("Error while creating file file %s , Error : %+v",f.Name(),err)
+				logger.Log(request.AppName).Errorf("Error while creating file file %s , Error : %+v", f.Name(), err)
 				return err
 			}
 
 			err = t.Execute(f, config)
 			if err != nil {
-				logger.Log(request.AppName).Errorf("Error while generating tempalte file  Error : %+v",err)
+				logger.Log(request.AppName).Errorf("Error while generating tempalte file  Error : %+v", err)
 				return err
 			}
 			f.Close()
@@ -165,8 +166,8 @@ func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 		return nil
 	})
 	if err != nil {
-		logger.Log(request.AppName).Debugf("Error while generating output folder. Error : %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Debugf("Error while generating output folder. Error : %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 
 	return nil
@@ -177,8 +178,8 @@ func createZip(request *GenerateTemplateRequest) *types.Error {
 
 	zipfile, err := os.Create(request.outputArchive)
 	if err != nil {
-		logger.Log(request.AppName).Errorf("Error while creating output zip file %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Errorf("Error while creating output zip file %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 	defer zipfile.Close()
 
@@ -228,18 +229,18 @@ func createZip(request *GenerateTemplateRequest) *types.Error {
 
 	})
 	if err != nil {
-		logger.Log(request.AppName).Debugf("Error while generating zip file. Error : %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Debugf("Error while generating zip file. Error : %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 	return nil
 }
 
 // tarrer walks paths to create tar file tarName
-func createTar(request *GenerateTemplateRequest) (*types.Error) {
+func createTar(request *GenerateTemplateRequest) *types.Error {
 	tarFile, err := os.Create(request.outputArchive)
 	if err != nil {
-		logger.Log(request.AppName).Errorf("Error while creating output tar file %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Errorf("Error while creating output tar file %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 	defer func() {
 		err = tarFile.Close()
@@ -247,8 +248,8 @@ func createTar(request *GenerateTemplateRequest) (*types.Error) {
 
 	absTar, err := filepath.Abs(request.outputArchive)
 	if err != nil {
-		logger.Log(request.AppName).Errorf("Error while creating output tar file %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+		logger.Log(request.AppName).Errorf("Error while creating output tar file %s", err.Error())
+		return utils.GetError(err, http.StatusInternalServerError)
 	}
 
 	// enable compression if file ends in .gz
@@ -261,7 +262,7 @@ func createTar(request *GenerateTemplateRequest) (*types.Error) {
 	defer tw.Close()
 
 	var paths []string
-	
+
 	paths = append(paths, request.outputFolder)
 
 	for _, path := range paths {
@@ -312,7 +313,7 @@ func createTar(request *GenerateTemplateRequest) (*types.Error) {
 
 			// add file to tar
 			srcFile, err := os.Open(file)
-			
+
 			if err != nil {
 				return err
 			}
@@ -326,8 +327,8 @@ func createTar(request *GenerateTemplateRequest) (*types.Error) {
 
 		// build tar
 		if err := filepath.Walk(path, walker); err != nil {
-			logger.Log(request.AppName).Debugf("Error while generating output folder. Error : %s",err.Error())
-		return utils.GetError(err,http.StatusInternalServerError)
+			logger.Log(request.AppName).Debugf("Error while generating output folder. Error : %s", err.Error())
+			return utils.GetError(err, http.StatusInternalServerError)
 		}
 	}
 	return nil
@@ -336,8 +337,8 @@ func createTar(request *GenerateTemplateRequest) (*types.Error) {
 func getConfiguration(req *GenerateTemplateRequest) types.Configuration {
 	var res types.Configuration
 	res.AppName = req.AppName
-	for _,feat := range req.Functionalities{
-		switch feat.Name{
+	for _, feat := range req.Functionalities {
+		switch feat.Name {
 		case LOGGING:
 			loggingframework, err := readLogJson(feat.Library)
 			if err != nil {
@@ -345,6 +346,7 @@ func getConfiguration(req *GenerateTemplateRequest) types.Configuration {
 				res.Logging = types.LoggingFramework{}
 			} else {
 				res.Logging = *loggingframework
+			   
 			}
 		}
 	}

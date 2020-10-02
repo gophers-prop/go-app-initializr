@@ -32,7 +32,7 @@
       "http"
     ],
     "paths": { 
-      "/user": {
+      "/v1/user": {
         "get": {
             "tags" :[
                 "user"
@@ -88,7 +88,7 @@
           }
         }
       },
-      "/user/{id}": {
+      "/v1/user/{id}": {
         "get": {
           "tags": [
             "user"
