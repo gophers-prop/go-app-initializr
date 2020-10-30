@@ -25,8 +25,10 @@ type User struct {
 //GetAll fetch all users
 func GetAll()([]User,*models.Error){
 
-	//this line is db dependent
-	resp , err := getAllUsers()
+	var resp []User
+	var err *models.Error
+	
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.GETALL}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.User.GET_ALL}} {{end}}
 		return nil,err
@@ -38,8 +40,9 @@ func GetAll()([]User,*models.Error){
 
 //Create logic for creating new user
 func (user *User)Create()(*User,*models.Error){
-	//this line db dependent
-	err := create(user)
+	var err *models.Error
+	
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.CREATE}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.User.CREATE}} {{end}}
 		return nil,err
@@ -55,8 +58,10 @@ func (user *User)Get()(*User,*models.Error){
 		return nil,&models.Error{Err:errors.New("Id cannot be empty"),HttpStatus:http.StatusBadRequest}
 	}
 
-	//TODO: this is db dependent
-	response,err := getByID(id)
+	var response *User
+	var err *models.Error
+	
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.GET}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.User.GET}} {{end}}
 		return nil,err
@@ -66,8 +71,9 @@ func (user *User)Get()(*User,*models.Error){
 
 //Update updating user details
 func (user *User)Update()(*models.Error){
-	//TODO: this is db dependent
-	err := update(user)
+	var err *models.Error
+
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.UPDATE}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.User.UPDATE}} {{end}}
 		return err
@@ -77,8 +83,9 @@ func (user *User)Update()(*models.Error){
 
 //Delete deleting user 
 func (user *User)Delete()(*models.Error){	
-	//TODO: this is db dependent
-	err := deleteByID(user.ID)
+	var err *models.Error
+
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.DELETEBYID}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.User.DELETE}} {{end}}
 		return err

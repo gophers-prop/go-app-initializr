@@ -42,7 +42,7 @@
             "GET_ALL_USER" : "glog.Infof(\"Request to get all user started\")",
             "LOGIN" : "glog.Infof(\"Request to login started\")",
             "LOGIN_ERROR" : "glog.Errorf(\"Error while login in  '%+v' \",loginErr.Err)",
-            "SIGNUP" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to signup started\")",
+            "SIGNUP" : "glog.Infof(\"Request to signup started\")",
             "SIGNUP_ERROR" : "glog.Errorf(\"Error while generating jwt token %+v\",signupErr.Err)",
             "REFRESH_TOKEN" : "glog.Infof(\"Request to refresh token started\")",
             "ERROR_KEY_NOT_FOUND_JWT" : "glog.Errorf(\"Error getting key from jwt '%+v' \",err)",

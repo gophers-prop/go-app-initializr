@@ -13,7 +13,7 @@ func init(){
   logrus.SetOutput(os.Stdout)
 
   // Only log the warning severity or above.
-  logrus.SetLevel(logrus.ErrorLevel)
+  logrus.SetLevel(logrus.DebugLevel)
 }
 
 //Log returns a logging entry that will have a label appName

@@ -22,9 +22,17 @@ type LoggingFramework struct {
 	Messages    Messages `json:"MESSAGES"`
 }
 
+type DatabaseFramework struct{
+	LibraryName string   `json:"LIBRARY_NAME"`
+	ImportPath  string   `json:"IMPORT_PATH"`
+	Version     string   `json:"VERSION"`
+	Messages    Messages `json:"MESSAGES"`
+}
+
 type Configuration struct {
 	AppName string
 	Logging LoggingFramework
+	Database DatabaseFramework
 }
 
 var Mutex = &sync.Mutex{}

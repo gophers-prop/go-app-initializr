@@ -17,7 +17,7 @@ import (
 	"strings"
 	"text/template"
 	"time"
-
+	"io/ioutil"
 	"github.com/gin-gonic/gin"
 )
 
@@ -127,7 +127,6 @@ func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 			featureMap[fun.Name](fun)
 		}
 	}
-
 	err = filepath.Walk(request.sourceFolder, func(filePath string, info os.FileInfo, err error) error {
 
 		outputFileName := strings.TrimPrefix(filePath, request.sourceFolder)
@@ -137,27 +136,29 @@ func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 		}
 
 		outputFileName = outputFileName[1:]
+
 		if info.IsDir() {
-			err := os.Mkdir(filepath.Join(request.outputFolder, outputFileName), 0777)
-			if err != nil {
-				return err
+			if _,err := os.Stat(filepath.Join(request.outputFolder,outputFileName));os.IsNotExist(err){
+				err := os.Mkdir(filepath.Join(request.outputFolder, outputFileName), 0777)
+				if err != nil {
+					return err
+				}
 			}
 		} else {
-			t, err := template.ParseFiles(filePath)
-			if err != nil {
-				logger.Log(request.AppName).Errorf("Error while parsing file %s , Error : %+v", filePath, err)
-				return err
-			}
-
+		    
 			f, err := os.Create(filepath.Join(request.outputFolder, outputFileName))
 			if err != nil {
 				logger.Log(request.AppName).Errorf("Error while creating file file %s , Error : %+v", f.Name(), err)
 				return err
 			}
-
-			err = t.Execute(f, config)
+			srcFile , err := ioutil.ReadFile(filePath)
 			if err != nil {
-				logger.Log(request.AppName).Errorf("Error while generating tempalte file  Error : %+v", err)
+				logger.Log(request.AppName).Errorf("Error while reading source folder file %s err %+v",filePath,err)
+				return err
+			}
+			_,err = f.Write(srcFile)
+			if err != nil {
+				logger.Log(request.AppName).Errorf("Error while saving content of file %s to output path %s with err %+v",filePath,outputFileName,err)
 				return err
 			}
 			f.Close()
@@ -169,7 +170,42 @@ func createOuputFolder(request *GenerateTemplateRequest) *types.Error {
 		logger.Log(request.AppName).Debugf("Error while generating output folder. Error : %s", err.Error())
 		return utils.GetError(err, http.StatusInternalServerError)
 	}
-
+	//Implementing config addition logic separately to the output folder generation
+	err = filepath.Walk(request.outputFolder,func(filePath string,info os.FileInfo, err error)error{
+		
+		if info.IsDir(){
+			return nil
+		}
+		t, err := template.ParseFiles(filePath)
+     	if err != nil {
+	    	logger.Log(request.AppName).Errorf("Error while parsing file %s , Error : %+v", filePath, err)
+	    	return err
+		}
+		f, err := os.Create(filePath)
+			if err != nil {
+				logger.Log(request.AppName).Errorf("Error while creating file file %s , Error : %+v", f.Name(), err)
+				return err
+			}
+ 	  //TODO: revisit this later .. seems like a heavy call to recreate the file 
+	//    f,err :=  os.OpenFile(filePath,os.O_SYNC,0644)
+	//    if err != nil {
+	// 	   logger.Log(request.AppName).Errorf("Error while opening file %s with err %+v",filePath,err)
+	// 	   return err
+	//    }
+	   
+	    err = t.Execute(f, config)
+		if err != nil {
+			logger.Log(request.AppName).Errorf("Error while generating tempalte file  Error : %+v", err)
+			return err
+		}
+		f.Close()
+		return nil
+	})
+	if err != nil{
+		logger.Log(request.AppName).Errorf("Error while templating the files %+v",err)
+	    return utils.GetError(err,http.StatusInternalServerError)
+	}
+	
 	return nil
 
 }
@@ -347,6 +383,14 @@ func getConfiguration(req *GenerateTemplateRequest) types.Configuration {
 			} else {
 				res.Logging = *loggingframework
 			   
+			}
+		case DATABASE:
+			databaseFramework , err := readDatabaseJson(feat.Library)
+			if err != nil{
+				logger.Log(req.AppName).Errorf("Error reading database framework %+v",err)
+				res.Database = types.DatabaseFramework{}
+			}else{
+				res.Database = *databaseFramework
 			}
 		}
 	}

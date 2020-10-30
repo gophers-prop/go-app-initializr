@@ -32,7 +32,9 @@ func (a *Auth)SignUp()(*SignUpLoginResp,*models.Error){
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.Auth.ERROR_ENCRYPTING_PASSWORD}} {{end}}
 		return nil,&models.Error{Err:err,HttpStatus:http.StatusBadRequest}
 	}
-	signUpErr := signup(a)
+	var signUpErr *models.Error
+
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.SIGNUP}} {{end}}
 	
 	if signUpErr != nil {
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.Auth.ERROR_SIGNING_UP}} {{end}}
@@ -53,7 +55,10 @@ func (a *Auth)SignUp()(*SignUpLoginResp,*models.Error){
 //LogIn logging logic 
 func (a *Auth)LogIn()(*SignUpLoginResp,*models.Error){
 
-	auth , err := getByEmail(a.Email)
+	var auth *Auth
+	var err *models.Error
+	
+	{{ if .Database.ImportPath }}{{ .Database.Messages.General.LOGIN}} {{end}}
 	if err != nil{
 		{{ if .Logging.ImportPath }} {{ .Logging.Messages.Auth.ERROR_LOGGING_IN}} {{end}}
 		return nil,err
