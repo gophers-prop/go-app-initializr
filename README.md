@@ -17,3 +17,14 @@ Credits of all packages used are given in respective application template README
 ### License
 
 The code is licensed under the permissive Apache v2.0 licence. This means you can do what you like with the software, as long as you include the required notices. [Read this](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)) for a summary.
+
+
+###Setup
+
+1) Install go > 1.12
+2) git clone https://github.com/gophers-prop/golang-appgen.git --do not clone inside GOPATH
+3) cd golang-appgen
+4) mkdir output
+5) mkdir outputzip
+4) go mod download
+6) go run cmd/main.go

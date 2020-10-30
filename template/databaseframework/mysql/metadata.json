@@ -1,0 +1,19 @@
+{
+    "LIBRARY_NAME": "github.com/go-sql-driver/mysql",
+    "VERSION" : "v1.5.0",
+    "IMPORT_PATH" : "_ \"github.com/go-sql-driver/mysql\"",
+    "MESSAGES" : {
+        "GENERAL":{
+            "SIGNUP":"signUpErr = signup(a)",
+            "LOGIN" : "auth , err = getByEmail(a.Email)",
+            "GETALL" : "resp , err = getAllUsers()",
+            "CREATE" : "err = create(user)",
+            "GET" : "response,err = getByID(id)",
+            "UPDATE" : "err = update(user)",
+            "DELETEBYID": "err = deleteByID(user.ID)"           
+        }
+    }
+
+
+
+}

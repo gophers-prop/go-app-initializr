@@ -3,10 +3,62 @@
     "IMPORT_PATH" : "github.com/sirupsen/logrus",
     "VERSION" : "v1.4.2",
     "MESSAGES"  : {
-        "ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Error(\"This is an error message\")",
-        "INFO" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Info(\"This is an info message\")",
-        "WARN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Warn(\"This is a warning message\")",
-        "FATAL" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Fatal(\"This is a fatal message\")",
-        "DEBUG" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debug(\"This is a debug message\")"
+        "GENERAL" :{
+            "ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Error(\"This is an error message\")",
+            "INFO" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Info(\"This is an info message\")",
+            "WARN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Warn(\"This is a warning message\")",
+            "FATAL" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Fatal(\"This is a fatal message\")",
+            "DEBUG" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debug(\"This is a debug message\")"
+        },
+        "USER" :{
+            "GET_ALL" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while getting all user %+v\",err.Err)",
+            "CREATE" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while creating  user %+v\",err.Err)",
+            "GET" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while getting user with user id  %s error %+v\",id,err.Err)",
+            "UPDATE" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while updating user with userId %s error %+v\",user.ID,err.Err)",
+            "DELETE" :  "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while deleting user %+v error %+v\",user,err.Err)"
+        },
+        "DATABASE" : {
+            "CONNECTION_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while connecting to database %+v\",err)",
+            "QUERY_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while executing query %+v\",err)"
+        },
+        "JWT" :{
+            "ERROR_GENERATING_NEW_TOKEN": "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while generating new token '%+v'\",tokenErr)",
+            "EMPTY_TOKEN_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Empty token or token not present in header\")",
+            "INVALID_TOKEN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Invalid token\")",
+            "ERROR_VALIDATION_TOKEN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while validating jwt token '%+v'\",err)",
+            "ERROR_PARSING_TOKEN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while parsing jwt token '%+v' '%+v'\",err)"
+        },
+        "AUTH" : {
+            "ERROR_ENCRYPTING_PASSWORD" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while encrypting password up '%+v'\",err)",
+            "ERROR_LOGGING_IN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while log In '%+v'\",err)",
+            "ERROR_SIGNING_UP" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while signing up '%+v'\",err)",
+            "ERROR_INCORRECT_PASSWORD" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Invalid password\")"
+        },
+        "HANDLER":{
+            "CREATE_USER" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to create user started\")",
+            "GET_USER" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to get user started\")",
+            "UPDATE_USER" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to update user started\")",
+            "DELETE_USER" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to delete user started\")",
+            "GET_ALL_USER" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to get all user started\")",
+            "LOGIN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to login started\")",
+            "LOGIN_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while login in  '%+v' \",loginErr.Err)",
+            "SIGNUP" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to signup started\")",
+            "SIGNUP_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error while generating jwt token %+v\",signupErr.Err)",
+            "REFRESH_TOKEN" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Debugf(\"Request to refresh token started\")",
+            "ERROR_KEY_NOT_FOUND_JWT" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error getting key from jwt '%+v' \",err)",
+            "ERROR_REFRESH_TOKEN":"logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error refreshing jwt token '%+v' \",refreshTokenErr.Err)"
+        },
+        "CONFIG" :{
+            "ERROR_READING_FILE" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"error while reading configuaration '%+v' \",err)",
+            "SUCCESSFULLY_LOADED" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Infof(\"Configuration from file config.yaml/config.json loaded successfully \")"
+        },
+        "SWAGGER" :{
+            "SERVER_STARTED_SUCCESS": "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Swagger server started on port '%s' successfully \",SWAGGER_PORT)",
+            "SERVER_STARTED_ERROR" : "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error starting swagger server '%+v' \",swaggerErr)"
+        },
+        "SERVER":{
+            "ERROR" :  "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Error starting server '%+v' \",serverErr)",
+            "SUCCESS" :  "logrus.WithFields(logrus.Fields{\"User\": \"walrus\",}).Errorf(\"Server  running on port '%s' \",port)"
+        }
     }
 } 

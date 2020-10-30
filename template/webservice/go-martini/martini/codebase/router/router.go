@@ -20,6 +20,6 @@ func RegisterRoutes(m *martini.ClassicMartini) {
 		r.Put("/user/:id", user.Update)
 		r.Delete("/user/:id", user.Delete)
 	})
-
+   
 	m.Run()
 }

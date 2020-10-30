@@ -4,12 +4,16 @@ import (
 	"sync"
 )
 type Messages struct {
-	Error string `json:"ERROR"`
-	Info  string `json:"INFO"`
-	Warn  string `json:"WARN"`
-	Fatal string `json:"FATAL"`
-	Debug string `json:"DEBUG"`
-}
+	General map[string]string `json:"GENERAL"`
+	User    map[string]string `json:"USER"` 
+	Database map[string]string `json:"DATABASE"`
+	Jwt      map[string]string `json:"JWT"`
+	Auth map[string]string `json:"AUTH"`
+	Handler map[string]string `json:"HANDLER"`
+	Config   map[string]string `json:"CONFIG"`
+	Swagger  map[string]string  `json:"SWAGGER"`
+	Server   map[string]string   `json:"SERVER"`
+  }
 
 type LoggingFramework struct {
 	LibraryName string   `json:"LIBRARY_NAME"`
@@ -18,9 +22,17 @@ type LoggingFramework struct {
 	Messages    Messages `json:"MESSAGES"`
 }
 
+type DatabaseFramework struct{
+	LibraryName string   `json:"LIBRARY_NAME"`
+	ImportPath  string   `json:"IMPORT_PATH"`
+	Version     string   `json:"VERSION"`
+	Messages    Messages `json:"MESSAGES"`
+}
+
 type Configuration struct {
 	AppName string
-	Logging *LoggingFramework
+	Logging LoggingFramework
+	Database DatabaseFramework
 }
 
 var Mutex = &sync.Mutex{}
